@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1014">
+  <meta name="description" content="Ghost — uma carteira de momentos vividos.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <title>Ghost — presença em movimento</title>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Ghost início">
+        <span class="brand-mark"><span></span></span>
+        <span>GHOST</span>
+      </a>
+      <span class="date-label" id="todayLabel"></span>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="eyebrow">SUA CARTEIRA DE MOMENTOS</div>
+        <h1>O tempo que<br><em>você vive.</em></h1>
+        <p class="hero-copy">Não é sobre fazer mais. É sobre perceber o que realmente aconteceu.</p>
+      </section>
+
+      <section class="daily-card panel">
+        <div class="daily-head">
+          <div>
+            <div class="eyebrow">PRESENÇA DE HOJE</div>
+            <div class="seconds"><span id="totalSeconds">0</span><small> / 1.000 s</small></div>
+          </div>
+          <div class="orb" aria-hidden="true"><span></span></div>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-foot"><span id="progressPercent">0% da referência diária</span><span id="remaining">1.000 s restantes</span></div>
+      </section>
+
+      <section class="section-heading">
+        <div><div class="eyebrow">UM NOVO RASTRO</div><h2>Registrar momento</h2></div>
+        <span class="step-number">01 / 03</span>
+      </section>
+
+      <form id="momentForm" class="panel form-panel">
+        <label class="field-label" for="momentTitle">O que aconteceu?</label>
+        <input id="momentTitle" name="title" maxlength="80" placeholder="Ex.: caminhar sem pressa, ouvir uma música..." required>
+
+        <div class="form-grid">
+          <div>
+            <label class="field-label" for="duration">Duração (segundos)</label>
+            <input id="duration" name="duration" type="number" min="1" max="86400" inputmode="numeric" placeholder="300" required>
+          </div>
+          <div>
+            <label class="field-label" for="category">Universo</label>
+            <select id="category" name="category">
+              <option>Presença</option><option>Conexão</option><option>Exploração</option>
+              <option>Criação</option><option>Contemplação</option><option>Aprendizado</option><option>Cuidado</option><option>Outro</option>
+            </select>
+          </div>
+        </div>
+
+        <label class="field-label" for="intention">Intenção / energia</label>
+        <select id="intention" name="intention">
+          <option value="Conexão">Conexão</option><option value="Curiosidade">Curiosidade</option>
+          <option value="Descanso">Descanso</option><option value="Expressão">Expressão</option>
+          <option value="Descoberta">Descoberta</option><option value="Presença">Presença</option>
+          <option value="Espontaneidade">Espontaneidade</option>
+        </select>
+
+        <div class="range-row">
+          <label class="field-label" for="energy">Energia</label>
+          <output id="energyOut">3 / 5</output>
+        </div>
+        <input class="range" id="energy" type="range" min="0" max="5" value="3">
+
+        <div class="range-row">
+          <label class="field-label" for="presence">Presença</label>
+          <output id="presenceOut">3 / 5</output>
+        </div>
+        <input class="range" id="presence" type="range" min="0" max="5" value="3">
+
+        <label class="field-label" for="reflection">O que ficou desse momento? <span class="optional">opcional</span></label>
+        <textarea id="reflection" rows="3" maxlength="500" placeholder="Uma sensação, uma descoberta, uma lembrança..."></textarea>
+
+        <button class="primary-button" type="submit"><span>＋</span> Guardar este momento</button>
+        <p class="privacy-note"><span class="privacy-dot"></span> Seus registros ficam neste dispositivo.</p>
+      </form>
+
+      <section class="section-heading timeline-heading">
+        <div><div class="eyebrow">RASTROS RECENTES</div><h2>Linha do tempo</h2></div>
+        <span class="step-number" id="momentCount">0 momentos</span>
+      </section>
+      <section id="timeline" class="timeline">
+        <div class="empty-state panel" id="emptyState">
+          <div class="empty-symbol">✳</div>
+          <h3>Seu primeiro rastro começa aqui.</h3>
+          <p>Registre um momento vivido. Não precisa ser extraordinário para ter significado.</p>
+        </div>
+      </section>
+
+      <section class="section-heading insight-heading">
+        <div><div class="eyebrow">OBSERVAÇÃO</div><h2>O que aparece</h2></div>
+        <span class="step-number">03 / 03</span>
+      </section>
+      <section class="insights-grid">
+        <div class="panel insight-card"><span class="insight-icon">◷</span><strong id="allTime">0 s</strong><small>tempo registrado</small></div>
+        <div class="panel insight-card"><span class="insight-icon">✳</span><strong id="avgPresence">—</strong><small>presença média</small></div>
+        <div class="panel insight-card wide"><span class="insight-icon">⌁</span><strong id="topCategory">Ainda observando</strong><small>universo mais frequente</small></div>
+      </section>
+      <p class="insight-caveat">Os indicadores são espelhos, não notas. O Ghost não mede o valor de um dia ou de uma pessoa.</p>
+
+      <footer>
+        <div class="footer-mark">GHOST <span>·</span> EXPERIMENTO 001</div>
+        <p>O ponto alto não precisa ser grande.<br>Precisa ser percebido.</p>
+        <button id="exportBtn" class="text-button">Exportar meus registros (JSON)</button>
+      </footer>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
