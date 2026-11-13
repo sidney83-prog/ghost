@@ -65,7 +65,7 @@ function symbolFor(category) {
 }
 function toast(message) {
   const el=$("toast"); el.textContent=message; el.classList.add("show");
-  setTimeout(()=>el.classList.remove("show"),2200);
+  setTimeout(()=>el.classList.remove("show"),2600);
 }
 $("momentForm").addEventListener("submit", event => {
   event.preventDefault();
@@ -97,12 +97,72 @@ function updateRanges() {
 }
 $("energy").addEventListener("input",updateRanges);
 $("presence").addEventListener("input",updateRanges);
+
 $("exportBtn").addEventListener("click", () => {
   const blob = new Blob([JSON.stringify({app:"Ghost Experimento 001",exportedAt:new Date().toISOString(),moments},null,2)],{type:"application/json"});
   const url=URL.createObjectURL(blob), a=document.createElement("a");
   a.href=url; a.download=`ghost-registros-${localDay()}.json`; a.click(); URL.revokeObjectURL(url);
   toast("Arquivo de registros exportado.");
 });
+
+// Importa sem substituir os registros atuais. IDs repetidos são ignorados.
+function normalizeImportedMoment(m) {
+  if (!m || typeof m !== "object") return null;
+  const duration = Number(m.duration);
+  const energy = Number(m.energy);
+  const presence = Number(m.presence);
+  const createdAt = Number(m.createdAt);
+  if (typeof m.id !== "string" || !m.id || typeof m.title !== "string" || !m.title.trim()) return null;
+  if (!Number.isInteger(duration) || duration < 1 || duration > 86400) return null;
+  if (!Number.isFinite(energy) || energy < 0 || energy > 5) return null;
+  if (!Number.isFinite(presence) || presence < 0 || presence > 5) return null;
+  if (!Number.isFinite(createdAt) || createdAt <= 0) return null;
+  return {
+    id: m.id,
+    title: m.title.trim(),
+    duration,
+    category: typeof m.category === "string" ? m.category : "Outro",
+    intention: typeof m.intention === "string" ? m.intention : "Presença",
+    energy,
+    presence,
+    reflection: typeof m.reflection === "string" ? m.reflection : "",
+    createdAt,
+    day: typeof m.day === "string" && /^\d{4}-\d{2}-\d{2}$/.test(m.day) ? m.day : localDay(new Date(createdAt))
+  };
+}
+$("importBtn").addEventListener("click", () => $("importFileInput").click());
+$("importFileInput").addEventListener("change", event => {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const payload = JSON.parse(String(reader.result || ""));
+      if (!payload || !Array.isArray(payload.moments)) throw new Error("Formato inválido");
+      const imported = payload.moments.map(normalizeImportedMoment).filter(Boolean);
+      const existingIds = new Set(moments.map(m => m.id));
+      const additions = imported.filter(m => !existingIds.has(m.id));
+      if (!additions.length) {
+        toast(imported.length ? "Esses registros já estão nesta biblioteca." : "Nenhum registro válido encontrado.");
+        return;
+      }
+      moments = [...moments, ...additions];
+      saveMoments();
+      render();
+      toast(`${additions.length} ${additions.length === 1 ? "registro importado" : "registros importados"} com sucesso.`);
+    } catch {
+      toast("Não foi possível ler esse arquivo JSON do Ghost.");
+    } finally {
+      event.target.value = "";
+    }
+  };
+  reader.onerror = () => {
+    toast("Não foi possível acessar o arquivo selecionado.");
+    event.target.value = "";
+  };
+  reader.readAsText(file);
+});
+
 $("todayLabel").textContent = new Intl.DateTimeFormat("pt-BR",{weekday:"short",day:"2-digit",month:"short",year:"numeric"}).format(new Date()).replace(".","");
 updateRanges(); render();
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {

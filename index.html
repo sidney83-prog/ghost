@@ -19,14 +19,12 @@
       </a>
       <span class="date-label" id="todayLabel"></span>
     </header>
-
     <main>
       <section class="hero">
         <div class="eyebrow">SUA CARTEIRA DE MOMENTOS</div>
         <h1>O tempo que<br><em>você vive.</em></h1>
         <p class="hero-copy">Não é sobre fazer mais. É sobre perceber o que realmente aconteceu.</p>
       </section>
-
       <section class="daily-card panel">
         <div class="daily-head">
           <div>
@@ -38,7 +36,6 @@
         <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
         <div class="progress-foot"><span id="progressPercent">0% da referência diária</span><span id="remaining">1.000 s restantes</span></div>
       </section>
-
       <section class="section-heading">
         <div><div class="eyebrow">UM NOVO RASTRO</div><h2>Registrar momento</h2></div>
         <span class="step-number">01 / 03</span>
@@ -47,7 +44,6 @@
       <form id="momentForm" class="panel form-panel">
         <label class="field-label" for="momentTitle">O que aconteceu?</label>
         <input id="momentTitle" name="title" maxlength="80" placeholder="Ex.: caminhar sem pressa, ouvir uma música..." required>
-
         <div class="form-grid">
           <div>
             <label class="field-label" for="duration">Duração (segundos)</label>
@@ -61,7 +57,6 @@
             </select>
           </div>
         </div>
-
         <label class="field-label" for="intention">Intenção / energia</label>
         <select id="intention" name="intention">
           <option value="Conexão">Conexão</option><option value="Curiosidade">Curiosidade</option>
@@ -69,7 +64,6 @@
           <option value="Descoberta">Descoberta</option><option value="Presença">Presença</option>
           <option value="Espontaneidade">Espontaneidade</option>
         </select>
-
         <div class="range-row">
           <label class="field-label" for="energy">Energia</label>
           <output id="energyOut">3 / 5</output>
@@ -81,14 +75,12 @@
           <output id="presenceOut">3 / 5</output>
         </div>
         <input class="range" id="presence" type="range" min="0" max="5" value="3">
-
         <label class="field-label" for="reflection">O que ficou desse momento? <span class="optional">opcional</span></label>
         <textarea id="reflection" rows="3" maxlength="500" placeholder="Uma sensação, uma descoberta, uma lembrança..."></textarea>
 
         <button class="primary-button" type="submit"><span>＋</span> Guardar este momento</button>
         <p class="privacy-note"><span class="privacy-dot"></span> Seus registros ficam neste dispositivo.</p>
       </form>
-
       <section class="section-heading timeline-heading">
         <div><div class="eyebrow">RASTROS RECENTES</div><h2>Linha do tempo</h2></div>
         <span class="step-number" id="momentCount">0 momentos</span>
@@ -100,7 +92,6 @@
           <p>Registre um momento vivido. Não precisa ser extraordinário para ter significado.</p>
         </div>
       </section>
-
       <section class="section-heading insight-heading">
         <div><div class="eyebrow">OBSERVAÇÃO</div><h2>O que aparece</h2></div>
         <span class="step-number">03 / 03</span>
@@ -111,11 +102,13 @@
         <div class="panel insight-card wide"><span class="insight-icon">⌁</span><strong id="topCategory">Ainda observando</strong><small>universo mais frequente</small></div>
       </section>
       <p class="insight-caveat">Os indicadores são espelhos, não notas. O Ghost não mede o valor de um dia ou de uma pessoa.</p>
-
       <footer>
         <div class="footer-mark">GHOST <span>·</span> EXPERIMENTO 001</div>
         <p>O ponto alto não precisa ser grande.<br>Precisa ser percebido.</p>
-        <button id="exportBtn" class="text-button">Exportar meus registros (JSON)</button>
+        <button id="exportBtn" class="text-button" type="button">Exportar meus registros (JSON)</button>
+        <button id="importBtn" class="text-button" type="button">Importar registros (JSON)</button>
+        <input id="importFileInput" type="file" accept=".json,application/json" hidden>
+        <p class="insight-caveat">A importação acrescenta registros novos e preserva os que já estão neste dispositivo.</p>
       </footer>
     </main>
   </div>
